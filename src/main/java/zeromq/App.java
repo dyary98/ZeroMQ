@@ -16,7 +16,9 @@ public class App {
             public void run() {
                 try (ZContext context = new ZContext()) {
                     ZMQ.Socket s = context.createSocket(SocketType.PUSH);
-                    s.setBacklog(500);
+
+                    // by default is 1000 you can change it
+                    s.setBacklog(1000);
                     s.connect("tcp://localhost:4000");
                     while (true) {
                         String msg = "hell0" + counter++;
@@ -27,12 +29,11 @@ public class App {
             };
         };
         t.start();
-        System.out.println("Hello World!");
-        int c = 0;
-        for (int i = 0; i < 1000; i++) {
-            System.out.println("slaw");
-        }
+        // when the Q fulls, it will stop the current thread, here we have another
+        // thread
+        // so it will stop that one and we can continue our works in the main thread
 
+        int c = 0;
         try {
             Thread.sleep(5000);
             while (c < 1010) {
